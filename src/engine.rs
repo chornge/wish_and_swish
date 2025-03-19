@@ -1,42 +1,76 @@
-use rppal::gpio::Gpio;
+use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
 use std::thread;
 use std::time::Duration;
+use sysfs_gpio::{Direction, Pin};
+use vosk::{Model, Recognizer};
 
-const STEP_PIN: u8 = 17; // GPIO pin number for stepping
-const DIRECTION_PIN: u8 = 27; // GPIO pin for direction
+const STEP_PIN: u64 = 17; // GPIO pin for stepping
+const DIRECTION_PIN: u64 = 27; // GPIO pin for direction
+const KEY_PHRASE: &str = "kobe";
 
-fn step_motor(steps: u32) {
-    let gpio = Gpio::new().unwrap();
-    let mut step_pin = gpio.get(STEP_PIN).unwrap().into_output();
-    let mut direction_pin = gpio.get(DIRECTION_PIN).unwrap().into_output();
+pub fn listen_for_keyphrase() {
+    let model = Model::new(".model").expect("Could not create model");
+    let mut recognizer = Recognizer::new(&model, 16000.0).expect("Could not create recognizer");
 
-    // Set direction (optional)
-    direction_pin.set_high(); // or low for reverse
+    let host = cpal::default_host();
 
-    for _ in 0..steps {
-        step_pin.set_high();
-        thread::sleep(Duration::from_millis(1)); // Step duration
-        step_pin.set_low();
-        thread::sleep(Duration::from_millis(1));
-    }
-}
+    let device = host
+        .default_input_device()
+        .expect("No input device available");
 
-pub fn listen_for_keyword() {
-    // Placeholder for audio listening logic
-    // Use a suitable speech recognition library or API
+    let config = device
+        .default_input_config()
+        .expect("Failed to get default input config");
+
+    let stream = device
+        .build_input_stream(
+            &config.into(),
+            move |data: &[f32], _: &cpal::InputCallbackInfo| {
+                let samples: Vec<i16> = data.iter().map(|&s| (s * 32767.0) as i16).collect();
+                if recognizer.accept_waveform(&samples).is_ok() {
+                    let result = recognizer.partial_result();
+                    if result.partial.contains(KEY_PHRASE) {
+                        println!("Keyphrase detected");
+                        activate_foot_pedal();
+                    }
+                }
+            },
+            move |err| {
+                eprintln!("Error occurred on stream: {}", err);
+            },
+            None,
+        )
+        .expect("Failed to build input stream");
+
+    stream.play().expect("Failed to start input stream");
+
+    // Keep main thread alive
     loop {
-        // Listen for audio input and check for the keyword "kobe"
-        // If detected, call the function to activate the motor
-        if detect_keyword() {
-            step_motor(100); // Adjust number of steps as needed
-            thread::sleep(Duration::from_secs(5)); // Hold for 5 seconds
-            step_motor(100); // Release
-        }
+        thread::sleep(Duration::from_secs(1));
     }
 }
 
-// Placeholder function for detecting the keyword
-fn detect_keyword() -> bool {
-    // Implement keyword detection logic here
-    false
+fn activate_foot_pedal() {
+    let step_pin = Pin::new(STEP_PIN);
+    let direction_pin = Pin::new(DIRECTION_PIN);
+
+    step_pin
+        .with_exported(|| {
+            direction_pin.with_exported(|| {
+                direction_pin.set_direction(Direction::Out)?;
+                step_pin.set_direction(Direction::Out)?;
+
+                // Set direction (optional)
+                direction_pin.set_value(1)?; // or 0 for reverse
+
+                step_pin.set_value(1)?;
+                println!("Foot pedal pressed");
+                thread::sleep(Duration::from_secs(5));
+                step_pin.set_value(0)?;
+                println!("Foot pedal released");
+
+                Ok(())
+            })
+        })
+        .unwrap();
 }

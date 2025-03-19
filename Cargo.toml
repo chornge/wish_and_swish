@@ -1,9 +1,10 @@
 [package]
 name = "wish_and_swish"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 authors = ["Christian Mbaba"]
 
 [dependencies]
-rppal = "0.11"  # For GPIO control
-rodio = "0.14"   # For audio playback
+cpal = "0.15.3"       # For audio output
+sysfs_gpio = "0.6.2"  # For GPIO access/support
+vosk = "0.3.1"        # For offline speech recognition
