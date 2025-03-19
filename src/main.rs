@@ -1,9 +1,7 @@
 mod engine;
 
-use engine::listen_for_keyword;
+use engine::listen_for_keyphrase;
 
 fn main() {
-    println!("Starting Wish n' Swish...");
-
-    listen_for_keyword();
+    listen_for_keyphrase();
 }
