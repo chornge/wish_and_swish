@@ -1,1 +1,4 @@
+/.vscode
+/.embuild
 /target
+/.DS_Store
