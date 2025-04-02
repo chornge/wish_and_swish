@@ -12,7 +12,7 @@
 
 ## Components Required
 
-- ~~Raspberry Pi (any model with GPIO support)~~ ESP32c3
+- ~~Raspberry Pi (any model with GPIO support)~~ Micro:bit v2 (or any thumbv7em target)
 - USB microphone or compatible GPIO microphone
 - Stepper motor with driver (e.g., A4988 or DRV8825)
 - Power supply (battery pack)
@@ -23,7 +23,7 @@
 
 ### Prerequisites
 
-- Take a look at the [https://github.com/esp-rs/esp-idf-template] repo, make sure you follow the prerequisites defined there.
+- Follow the prerequisite instructions at [https://github.com/esp-rs/esp-idf-template]
 
 ## Installation
 
@@ -36,7 +36,7 @@ cd wish-n-swish
 
 ## Usage
 
-- Wiring: Connect stepper motor and microphone to ESP32c3 GPIO pins accordingly.
+- Wiring: Connect stepper motor and microphone to GPIO pins accordingly.
 
 ### Build Appication:
 
