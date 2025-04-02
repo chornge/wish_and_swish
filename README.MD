@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Wish n' Swish** is a voice-operated trash can opener that utilizes a Raspberry Pi and a stepper motor to automatically open a trash can when it hears the keyword "kobe." This project aims to make waste disposal hands-free and convenient.
+**Wish n' Swish** is a voice-operated trash can opener that utilizes a microcontroller and a stepper motor to automatically open a trash can when it hears the keyword "kobe." This project aims to make waste disposal hands-free and convenient.
 
 ## Features
 
@@ -12,7 +12,7 @@
 
 ## Components Required
 
-- Raspberry Pi (any model with GPIO support)
+- ~~Raspberry Pi (any model with GPIO support)~~ Micro:bit v2 (or any thumbv7em target)
 - USB microphone or compatible GPIO microphone
 - Stepper motor with driver (e.g., A4988 or DRV8825)
 - Power supply (battery pack)
@@ -23,14 +23,7 @@
 
 ### Prerequisites
 
-- Rust installed on your Raspberry Pi. Follow the instructions at [rustup.rs](https://rustup.rs/) to install Rust.
-- The following dependencies in your `Cargo.toml`:
-
-```toml
-[dependencies]
-rppal = "0.11"  # For GPIO control
-rodio = "0.14"   # For audio playback
-```
+- Follow the prerequisite instructions at [https://github.com/esp-rs/esp-idf-template]
 
 ## Installation
 
@@ -43,7 +36,7 @@ cd wish-n-swish
 
 ## Usage
 
-- Wiring: Connect stepper motor and microphone to Raspberry Pi GPIO pins accordingly.
+- Wiring: Connect stepper motor and microphone to GPIO pins accordingly.
 
 ### Build Appication:
 

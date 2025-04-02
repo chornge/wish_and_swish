@@ -1,7 +1,12 @@
-mod engine;
+#![no_std]
+#![no_main]
 
-use engine::listen_for_keyphrase;
+use cortex_m_rt::entry;
+use panic_halt as _;
 
-fn main() {
-    listen_for_keyphrase();
+#[entry]
+fn main() -> ! {
+    loop {
+        //
+    }
 }
