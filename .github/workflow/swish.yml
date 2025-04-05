@@ -1,0 +1,32 @@
+on: push
+name: WishNSwish
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v2
+        with:
+          toolchain: nightly-2025-03-12
+          profile: minimal
+          target: thumbv7em-none-eabihf
+          override: true
+
+      - name: Install Dependencies
+        run: |
+          rustup target add thumbv7em-none-eabihf
+          rustup component add rustfmt clippy llvm-tools
+          cargo install cargo-binutils
+
+      - name: Run Lint
+        run: cargo clippy --bin wish_and_swish -- -D warnings
+
+      - name: Build
+        run: cargo build --release
