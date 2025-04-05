@@ -1,11 +1,16 @@
 #![no_std]
 #![no_main]
 
-use cortex_m_rt::entry;
-use panic_halt as _;
+use defmt::info;
+use defmt_rtt as _;
+use embassy_executor::Spawner;
+use panic_probe as _;
 
-#[entry]
-fn main() -> ! {
+#[embassy_executor::main]
+async fn main(_spawner: Spawner) {
+    info!("Starting...");
+    
+    #[allow(clippy::empty_loop)]
     loop {
         //
     }
