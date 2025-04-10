@@ -694,7 +694,7 @@ dependencies = [
 
 [[package]]
 name = "wish_and_swish"
-version = "0.2.2"
+version = "0.2.3"
 dependencies = [
  "alloc-cortex-m",
  "cortex-m",
