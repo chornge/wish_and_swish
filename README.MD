@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Wish n' Swish** is a voice-operated trash can opener that utilizes a microcontroller and a stepper motor to automatically open a trash can when it hears the keyword "kobe." This project aims to make waste disposal hands-free and convenient.
+**Wish n' Swish** is a voice-operated trash can opener that utilizes a microcontroller and a stepper motor to automatically open a trash can when it hears the keyword "Trash Can." This project aims to make waste disposal hands-free and convenient.
 
 ## Features
 
@@ -49,11 +49,11 @@ cargo build
 ```bash
 cargo run
 ```
-- Activate the Trash Can: Say "kobe" to open the trash can. The motor will activate, holding the pedal down for 5 seconds.
+- Activate the Trash Can: Say "Trash Can" to open the trash can. The motor will activate, holding the pedal down for 5 seconds.
 
 ## Troubleshooting
 
-- Keyword Detection: If the keyword "kobe" is not detected, ensure your microphone is correctly configured and positioned.
+- Keyword Detection: If the keyword "Trash Can" is not detected, ensure your microphone is correctly configured and positioned.
 - Motor Activation: Check your wiring and motor driver connections if the motor does not activate.
 - Power Supply: Ensure that your battery is charged and capable of supplying adequate voltage and current.
 
