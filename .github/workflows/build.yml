@@ -1,4 +1,5 @@
-name: WishNSwish
+name: Build
+
 on: push
 
 env:
