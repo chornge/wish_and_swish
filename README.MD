@@ -1,3 +1,5 @@
+![CI/CD](https://github.com/chornge/wish_and_swish/actions/workflows/build.yml/badge.svg?branch=main)
+
 # Wish n' Swish
 
 ## Overview
