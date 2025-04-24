@@ -23,34 +23,50 @@
 
 ## Installation
 
-### Prerequisites
+~~### Prerequisites~~
 
-- Follow the prerequisite instructions at [https://github.com/esp-rs/esp-idf-template]
-
-## Installation
+~~- Follow the prerequisite instructions at [https://github.com/esp-rs/esp-idf-template]~~
 
 ### Clone Repository:
 
 ```bash
-git clone https://github.com/chornge/wish_n_swish.git
-cd wish-n-swish
+git clone https://github.com/chornge/wish_and_swish.git
+cd wish_and_swish
 ```
 
-## Usage
+## Usage (on RaspberryPi)
+
+- Install RaspberryPi Imager [https://www.raspberrypi.com/software/]
+- Choose Device, O.S and Storage
+- Edit settings to set username, hostname, enable wifi and SSH.
+- SSH into RaspberryPi: `ssh raspberry@raspberrypi.local`
+- Enter password when prompted
+- Install the following in `/home/pi`:
+
+  `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh`
+
+  `sudo apt install -y libclang-dev libasound2-dev`
+
+  `rustup target add aarch64-unknown-linux-gnu`
+
+  `rustup component add rustfmt clippy llvm-tools`
+
+  `cargo install cargo-binutils`
 
 - Wiring: Connect stepper motor and microphone to GPIO pins accordingly.
 
 ### Build Appication:
 
 ```bash
-cargo build
+cargo build --release
 ```
 
 ### Run Application:
 
 ```bash
-cargo run
+cargo run --release
 ```
+
 - Activate the Trash Can: Say "kobe" to open the trash can. The motor will activate, holding the pedal down for 5 seconds.
 
 ## Troubleshooting
