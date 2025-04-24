@@ -25,13 +25,12 @@ fn main() {
         let reader = BufReader::new(stdout);
 
         // Process each line of output
-        for line in reader.lines() {
-            if let Ok(output) = line {
-                println!("Rustpotter Output: {}", output);
+        for output in reader.lines().flatten() {
+            println!("Rustpotter Output: {}", output);
 
-                if output.contains(WAKEWORD) {
-                    on_wakeword_detected();
-                }
+            // Check if the output indicates a wake word detection
+            if output.contains(WAKEWORD) {
+                on_wakeword_detected();
             }
         }
     }
