@@ -14,7 +14,7 @@
 
 ## Components Required
 
-- ~~Raspberry Pi (any model with GPIO support)~~ Micro:bit v2 (or any thumbv7em target)
+- ~~Micro:bit v2 (or any thumbv7em target)~~ Raspberry Pi (any model with GPIO support)
 - USB microphone or compatible GPIO microphone
 - Stepper motor with driver (e.g., A4988 or DRV8825)
 - Power supply (battery pack)
