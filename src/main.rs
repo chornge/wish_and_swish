@@ -25,7 +25,7 @@ fn main() {
         let reader = BufReader::new(stdout);
 
         // Process each line of output
-        for output in reader.lines().flatten() {
+        for output in reader.lines().map_while(Result::ok) {
             println!("Rustpotter Output: {}", output);
 
             // Check if the output indicates a wake word detection
