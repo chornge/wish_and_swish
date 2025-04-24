@@ -1,56 +1,62 @@
-#![no_std]
-#![no_main]
-#![feature(alloc_error_handler)]
-extern crate alloc;
+use cpal::traits::{DeviceTrait, HostTrait};
+use std::io::{BufRead, BufReader};
+use std::process::{Command, Stdio};
+use std::thread;
 
-use alloc::vec::Vec;
-// use cortex_m_rt::entry;
-use defmt::info;
-use defmt_rtt as _;
-use embassy_executor::Spawner;
+const WAKEWORD: &str = "kobe";
+const MODEL_PATH: &str = "./model.rpw";
+const RUSTPOTTER_PATH: &str = "./rustpotter-cli";
 
-#[allow(unused_imports)]
-use embassy_nrf::peripherals::SAADC;
+fn main() {
+    let device_index = 2;
 
-#[allow(unused_imports)]
-use embassy_nrf::saadc::{self, ChannelConfig, Config, Saadc};
+    // Run the rustpotter-cli binary as a subprocess
+    let mut child = Command::new(RUSTPOTTER_PATH)
+        .arg("spot")
+        .arg("--device-index")
+        .arg(device_index.to_string())
+        .arg(MODEL_PATH)
+        .stdout(Stdio::piped())
+        .spawn()
+        .expect("Failed to start rustpotter-cli");
 
-//use embassy_time::{Duration, Timer};
-use embedded_alloc::LlffHeap as Heap;
-use panic_probe as _;
-// use rustpotter::Rustpotter;
+    // Capture output of rustpotter-cli
+    if let Some(stdout) = child.stdout.take() {
+        let reader = BufReader::new(stdout);
 
-#[global_allocator]
-static HEAP: Heap = Heap::empty();
+        // Process each line of output
+        for line in reader.lines() {
+            if let Ok(output) = line {
+                println!("Rustpotter Output: {}", output);
 
-#[embassy_executor::main]
-async fn main(_spawner: Spawner) {
-    // Initialize allocator BEFORE using it
-    {
-        use core::mem::MaybeUninit;
-        const HEAP_SIZE: usize = 1024;
-        static mut HEAP_MEM: [MaybeUninit<u8>; HEAP_SIZE] = [MaybeUninit::uninit(); HEAP_SIZE];
-        unsafe { HEAP.init(&raw mut HEAP_MEM as usize, HEAP_SIZE) }
+                if output.contains(WAKEWORD) {
+                    on_wakeword_detected();
+                }
+            }
+        }
     }
 
-    info!("Starting...");
+    // Wait for subprocess to finish
+    let _ = child.wait();
 
-    let _model = include_bytes!("../model.rpw");
-
-    //let mut rustpotter = Rustpotter::new(model).unwrap();
-
+    // Keep program running
     loop {
-        let _audio_data = get_audio_data(); // Replace with actual audio data
-        //if rustpotter.process_audio(audio_data).unwrap() {
-        //on_wakeword_detected();
-        //}
+        thread::park();
     }
 }
 
-fn get_audio_data() -> Vec<i16> {
-    Vec::from([0; 160]) // 160 samples of silence
+fn on_wakeword_detected() {
+    println!("Wake word detected! Moving to SERVO state...");
 }
 
-fn _on_wakeword_detected() {
-    info!("Moving to next state...");
+fn _list_audio_devices() {
+    let host = cpal::default_host();
+    let devices = host.input_devices().expect("Failed to get input devices");
+    for (index, device) in devices.enumerate() {
+        println!(
+            "Device {}: {}",
+            index,
+            device.name().unwrap_or("Unknown".to_string())
+        );
+    }
 }

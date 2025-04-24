@@ -13,8 +13,8 @@
 #   "-C", "link-arg=-Tdefmt.x",
 # ]
 
-[build]
-target = "aarch64-unknown-linux-gnu"
+# [build]
+# target = "aarch64-unknown-linux-gnu"
 
 # [env]
 # DEFMT_LOG = "debug"
