@@ -1,20 +1,20 @@
 ![CI/CD](https://github.com/chornge/wish_and_swish/actions/workflows/build.yml/badge.svg?branch=main)
 
-# Wish n' Swish
+# Wish And Swish
 
 ## Overview
 
-**Wish n' Swish** is a voice-operated trash can opener that utilizes a microcontroller and a stepper motor to automatically open a trash can when it hears the keyword "kobe." This project aims to make waste disposal hands-free and convenient.
+A voice-operated trash can opener that utilizes a microcontroller and a stepper motor to automatically open a trash can when it hears the wakeword "kobe." This project aims to make waste disposal hands-free and convenient.
 
 ## Features
 
-- Voice activation via keyword detection
+- Voice activation via wakeword detection
 - Stepper motor control to operate the trash can foot pedal
 - Battery-operated design with easily swappable batteries
 
 ## Components Required
 
-- ~~Micro:bit v2 (or any thumbv7em target)~~ Raspberry Pi (any model with GPIO support)
+- ~~Micro:bit v2 (or any thumbv7em target)~~ Raspberry Pi 4B (`aarch64-unknown-linux-gnu`)
 - USB microphone or compatible GPIO microphone
 - Stepper motor with driver (e.g., A4988 or DRV8825)
 - Power supply (battery pack)
@@ -69,7 +69,7 @@ Say "kobe" to open the trash can - the motor will activate, holding the pedal do
 
 ## Troubleshooting
 
-- Keyword Detection: If the keyword "kobe" is not detected, ensure your microphone is correctly configured and positioned.
+- Wakeword Detection: If the wakeword "kobe" is not detected, ensure your microphone is correctly configured and positioned.
 - Motor Activation: Check your wiring and motor driver connections if the motor does not activate.
 - Power Supply: Ensure that your battery is charged and capable of supplying adequate voltage and current.
 
