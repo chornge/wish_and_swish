@@ -54,12 +54,16 @@ cd wish_and_swish
 
   `cargo install cargo-binutils`
 
-### Build & Run Appication:
+### Build (depending on machine):
 
 ```bash
-cargo build --release
-cargo run --release
+cargo build --release --features gpio     // RaspberryPi
+cargo build --no-default-features         // Non-Linux machine
 ```
+
+### Run:
+
+`cargo run --release`
 
 Say "kobe" to open the trash can - the motor will activate, holding the pedal down for 5 seconds.
 
