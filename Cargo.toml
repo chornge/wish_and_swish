@@ -5,3 +5,4 @@ edition = "2024"
 authors = ["Christian Mbaba"]
 
 [dependencies]
+rppal = "0.22.1"
