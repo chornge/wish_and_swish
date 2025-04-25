@@ -73,11 +73,11 @@ fn on_wakeword_detected() {
 fn activate_motor<T: GpioControl>(motor_pins: &mut [T]) {
     println!("Rotating motor...");
     for _ in 0..512 {
-        for i in 0..4 {
-            motor_pins[i].set_high();
-            for j in 0..4 {
-                if j != i {
-                    motor_pins[j].set_low();
+        for (j, motor_pin) in motor_pins.iter_mut().enumerate().take(4) {
+            motor_pin.set_high();
+            for (i, other_pin) in motor_pins.iter_mut().enumerate().take(4) {
+                if i != j {
+                    other_pin.set_low();
                 }
             }
             sleep(Duration::from_millis(1));
@@ -88,11 +88,11 @@ fn activate_motor<T: GpioControl>(motor_pins: &mut [T]) {
 
     println!("Reverting motor...");
     for _ in 0..512 {
-        for i in (0..4).rev() {
-            motor_pins[i].set_high();
-            for j in 0..4 {
-                if j != i {
-                    motor_pins[j].set_low();
+        for (j, motor_pin) in motor_pins.iter_mut().enumerate().take(4).rev() {
+            motor_pin.set_high();
+            for (i, other_pin) in motor_pins.iter_mut().enumerate().take(4) {
+                if i != j {
+                    other_pin.set_low();
                 }
             }
             sleep(Duration::from_millis(1));
