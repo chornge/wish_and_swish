@@ -75,7 +75,7 @@ fn activate_motor<T: GpioControl>(motor_pins: &mut [T]) {
     println!("Rotating motor...");
     rotate_motor(motor_pins, STEPS);
 
-    sleep(Duration::from_secs(3));
+    sleep(Duration::from_secs(4));
 
     println!("Reverting motor...");
     rotate_motor(motor_pins, STEPS);
