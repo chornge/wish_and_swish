@@ -5,4 +5,3 @@ edition = "2024"
 authors = ["Christian Mbaba"]
 
 [dependencies]
-cpal = "0.15.3"

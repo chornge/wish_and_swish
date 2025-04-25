@@ -1,7 +1,6 @@
-use cpal::traits::{DeviceTrait, HostTrait};
 use std::io::{BufRead, BufReader};
 use std::process::{Command, Stdio};
-use std::thread;
+use std::thread::park;
 
 const WAKEWORD: &str = "kobe";
 const MODEL_PATH: &str = "./model.rpw";
@@ -9,9 +8,7 @@ const RUSTPOTTER_PATH: &str = "./rustpotter-cli";
 
 fn main() {
     let device_index = 2;
-
-    // Run the rustpotter-cli binary as a subprocess
-    let mut child = Command::new(RUSTPOTTER_PATH)
+    let mut subprocess = Command::new(RUSTPOTTER_PATH)
         .arg("spot")
         .arg("--device-index")
         .arg(device_index.to_string())
@@ -20,42 +17,62 @@ fn main() {
         .spawn()
         .expect("Failed to start rustpotter-cli");
 
-    // Capture output of rustpotter-cli
-    if let Some(stdout) = child.stdout.take() {
+    if let Some(stdout) = subprocess.stdout.take() {
         let reader = BufReader::new(stdout);
-
-        // Process each line of output
-        for output in reader.lines().map_while(Result::ok) {
-            println!("{}", output);
-
-            // Check if the output indicates a wake word detection
-            if output.contains(WAKEWORD) {
-                on_wakeword_detected();
-            }
-        }
+        process_rustpotter_output(reader, on_wakeword_detected);
     }
 
-    // Wait for subprocess to finish
-    let _ = child.wait();
+    let _ = subprocess.wait();
 
-    // Keep program running
     loop {
-        thread::park();
+        park();
+    }
+}
+
+fn process_rustpotter_output<R: BufRead, F: FnMut()>(reader: R, mut on_wakeword_detected: F) {
+    for output in reader.lines().map_while(Result::ok) {
+        println!("{}", output);
+        if output.contains(WAKEWORD) {
+            on_wakeword_detected();
+        }
     }
 }
 
 fn on_wakeword_detected() {
-    println!("Wake word detected! Moving to SERVO state...");
+    println!("Interacting with SERVO...");
 }
 
-fn _list_audio_devices() {
-    let host = cpal::default_host();
-    let devices = host.input_devices().expect("Failed to get input devices");
-    for (index, device) in devices.enumerate() {
-        println!(
-            "Device {}: {}",
-            index,
-            device.name().unwrap_or("Unknown".to_string())
-        );
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::io::Cursor;
+
+    #[test]
+    fn output_with_wakeword_should_trigger_detection() {
+        let input = format!("Output1\n{}\nOutput2\n", WAKEWORD);
+        let reader = Cursor::new(input);
+
+        let mut detected = false;
+
+        process_rustpotter_output(reader, || {
+            detected = true;
+        });
+
+        assert!(detected, "Wakeword should've been detected in the output");
+    }
+
+    #[test]
+    fn output_without_wakeword_should_not_trigger_detection() {
+        const SILENCE: &str = "";
+        let input = format!("Output1\n{}\nOutput2\n", SILENCE);
+        let reader = Cursor::new(input);
+
+        let mut detected = false;
+
+        process_rustpotter_output(reader, || {
+            detected = false;
+        });
+
+        assert!(!detected, "Wakeword was incorrectly detected in the output");
     }
 }
