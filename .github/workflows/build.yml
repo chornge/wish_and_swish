@@ -31,5 +31,5 @@ jobs:
         run: cargo clippy --release -- -D warnings
 
       - name: Run Tests
-        run: cargo test
+        run: cargo test --release
       
