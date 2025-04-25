@@ -163,7 +163,7 @@ mod tests {
     }
     
     #[test]
-    fn test_activating_motor_sets_pins_high_and_reverts_after_4_seconds() {
+    fn activating_motor_sets_pins_high_and_reverts_after_4_seconds() {
         use std::time::Instant;
 
         let mut motor_pins = vec![MockPin::default(); 4];
