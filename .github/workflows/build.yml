@@ -28,7 +28,7 @@ jobs:
           cargo install cargo-binutils
 
       - name: Run Linter
-        run: cargo clippy --bin wish_and_swish -- -D warnings
+        run: cargo clippy --release -- -D warnings
 
       - name: Run Tests
         run: cargo test
