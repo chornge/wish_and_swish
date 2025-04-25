@@ -1,7 +1,11 @@
 [package]
 name = "wish_and_swish"
-version = "1.0.2"
+version = "1.0.3"
 edition = "2024"
 authors = ["Christian Mbaba"]
 
+[features]
+gpio = ["rppal"]
+
 [dependencies]
+rppal = { version = "0.22.1", optional = true }
