@@ -8,6 +8,7 @@ const WAKEWORD: &str = "kobe";
 const MODEL_PATH: &str = "./model.rpw";
 const RUSTPOTTER_PATH: &str = "./rustpotter-cli";
 const STEPPER_MOTOR_PINS: [u8; 4] = [17, 27, 22, 23]; // Physical Pins [11, 13, 15, 16]
+const STEPS: usize = 512; // Full rotation
 
 trait GpioControl {
     fn set_high(&mut self);
@@ -72,30 +73,28 @@ fn on_wakeword_detected() {
 
 fn activate_motor<T: GpioControl>(motor_pins: &mut [T]) {
     println!("Rotating motor...");
-    for _ in 0..512 {
-        for (j, motor_pin) in motor_pins.iter_mut().enumerate().take(4) {
-            motor_pin.set_high();
-            for (i, other_pin) in motor_pins.iter_mut().enumerate().take(4) {
-                if i != j {
-                    other_pin.set_low();
-                }
-            }
-            sleep(Duration::from_millis(1));
-        }
-    }
+    rotate_motor(motor_pins, STEPS);
 
     sleep(Duration::from_secs(3));
 
     println!("Reverting motor...");
-    for _ in 0..512 {
-        for (j, motor_pin) in motor_pins.iter_mut().enumerate().take(4).rev() {
-            motor_pin.set_high();
-            for (i, other_pin) in motor_pins.iter_mut().enumerate().take(4) {
-                if i != j {
-                    other_pin.set_low();
-                }
+    rotate_motor(motor_pins, STEPS);
+}
+
+fn rotate_motor<T: GpioControl>(motor_pins: &mut [T], steps: usize) {
+    for _ in 0..steps {
+        set_pins_high_low(motor_pins);
+        sleep(Duration::from_millis(1));
+    }
+}
+
+fn set_pins_high_low<T: GpioControl>(motor_pins: &mut [T]) {
+    for j in 0..motor_pins.len().min(4) {
+        motor_pins[j].set_high();
+        for i in 0..motor_pins.len().min(4) {
+            if i != j {
+                motor_pins[i].set_low();
             }
-            sleep(Duration::from_millis(1));
         }
     }
 }
