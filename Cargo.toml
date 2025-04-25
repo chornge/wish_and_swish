@@ -1,8 +1,7 @@
 [package]
 name = "wish_and_swish"
-version = "1.0.1"
+version = "1.0.2"
 edition = "2024"
 authors = ["Christian Mbaba"]
 
 [dependencies]
-cpal = "0.15.3"

@@ -27,8 +27,9 @@ jobs:
           rustup component add rustfmt clippy llvm-tools
           cargo install cargo-binutils
 
-      - name: Run Lint
+      - name: Run Linter
         run: cargo clippy --bin wish_and_swish -- -D warnings
 
-      - name: Build
-        run: cargo build --release
+      - name: Run Tests
+        run: cargo test
+      
