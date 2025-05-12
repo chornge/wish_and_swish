@@ -19,7 +19,7 @@ dependencies = [
 
 [[package]]
 name = "wish_and_swish"
-version = "1.0.4"
+version = "1.0.5"
 dependencies = [
  "rppal",
 ]
