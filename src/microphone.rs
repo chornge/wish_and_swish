@@ -2,8 +2,8 @@ use std::io::BufRead;
 use std::process::{Command, Stdio};
 
 const WAKEWORD: &str = "kobe";
-const MODEL_PATH: &str = "./model.rpw";
-const RUSTPOTTER_PATH: &str = "./rustpotter-cli";
+const MODEL_PATH: &str = "../model.rpw";
+const RUSTPOTTER_PATH: &str = "../rustpotter-cli";
 
 pub fn start_microphone(device_index: usize) -> std::process::Child {
     Command::new(RUSTPOTTER_PATH)
