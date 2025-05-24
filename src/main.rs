@@ -1,8 +1,8 @@
-mod actuator;
-mod microphone;
+mod audio;
+mod motor;
 
-use actuator::start_actuator;
-use microphone::{process_microphone_input, start_microphone};
+use audio::microphone::{process_microphone_input, start_microphone};
+use motor::actuator::start_actuator;
 
 fn main() {
     let device_index = 2;
